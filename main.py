@@ -3,44 +3,10 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from datetime import date
 from dateutil.relativedelta import relativedelta
-import mysql.connector
-import configparser
-from sqlalchemy import create_engine
 from fake_useragent import UserAgent
 import requests
 from bs4 import BeautifulSoup
-
-config = configparser.ConfigParser()
-config.read('config.ini')
-connector_dir = {"host" : "localhost",
-                 "port" : 3306,
-                 "user" : "root",
-                 "password" : "SQLRom3821!",
-                 "database" : "Kpop"}
-
-""" Function to register or get data """
-def register_data(dataf: pd.DataFrame, table_name: str):
-    mydb = mysql.connector.connect(**connector_dir)
-    mycursor = mydb.cursor()
-
-    engine = create_engine(f"mysql+mysqlconnector://{connector_dir['user']}:{connector_dir['password']}@{connector_dir['host']}:{connector_dir['port']}/{connector_dir['database']}")
-    dataf.to_sql(table_name, con=engine, if_exists='replace', index=True, index_label= f"{table_name}_id")
-
-    mydb.commit()
-    mydb.close()
-
-def get_sql_data(table_name: str) -> pd.DataFrame:
-    mydb = mysql.connector.connect(**connector_dir)
-    mycursor = mydb.cursor()
-
-    engine = create_engine(f"mysql+mysqlconnector://{connector_dir['user']}:{connector_dir['password']}@{connector_dir['host']}:{connector_dir['port']}/{connector_dir['database']}")
-    my_df = pd.read_sql_table(table_name, engine)
-
-    mydb.commit()
-    mydb.close()
-
-    return my_df
-""" -------------------------------- """ 
+ 
 def get_page_rank_body(driver, period: str, time: int, year: int):
     driver.get("https://circlechart.kr/page_chart/onoff.circle?nationGbn=T&serviceGbn=ALL&targetTime="+str(time)+"&hitYear="+str(year)+"&termGbn="+str(period)+"&yearTime=3")
     return driver.find_element(By.ID, "pc_chart_tbody")
