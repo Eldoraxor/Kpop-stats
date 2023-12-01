@@ -8,7 +8,7 @@ config.read('config.ini')
 connector_dir = {"host" : "localhost",
                  "port" : 3306,
                  "user" : "root",
-                 "password" : "SQLRom3821!",
+                 "password" : config["mysql_password"],
                  "database" : "Kpop"}
 
 def register_data(dataf: pd.DataFrame, table_name: str):

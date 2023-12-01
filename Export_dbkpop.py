@@ -1,10 +1,11 @@
 import pandas as pd
-from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-import requests
-from main import register_data, get_sql_data
 
+import requests
+from bs4 import BeautifulSoup
+
+from MySQL.MySQL_connection import register_data, get_sql_data
+
+#Function that returns all the kpop artists stored in dbkpop.com
 def get_artists_infos():
     columns = ["Profile", "Stage name", "Full name", "Korean name", 
             "Korean stage name", "Date of birth", "Group", "Country", 
@@ -13,10 +14,12 @@ def get_artists_infos():
     response = requests.get('https://dbkpop.com/db/all-k-pop-idols/')
     soup = BeautifulSoup(response.text, 'lxml')
     tbody = soup.find("tbody")
+
     artists = []
     for line in tbody.find_all("tr"):
         artists.append([column.text for column in line.find_all("td")])
     artists_df = pd.DataFrame(artists, columns=columns)
+
     return artists_df
 
 def get_artist_id():
@@ -29,5 +32,3 @@ def get_artist_id():
             print(artist)
     artist_ranking_df["artist_id"] = artist_id
     print(artist_ranking_df)
-
-get_artist_id()

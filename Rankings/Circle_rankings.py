@@ -2,11 +2,24 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
+#Function that returns the html body of the ranking of kpop songs
+#Parameters:
+#   - driver : Webdriver use to extract html content from link
+#   - period (str) : Frequency of the ranking
+#                    Among ["weekly", "monthly"(, "year")]
+#   - time (int) : Month, week number (depending of the period) of the ranking
+#   - year (int) : Year of the ranking
 def get_page_rank_body(driver, period: str, time: int, year: int):
     driver.get("https://circlechart.kr/page_chart/onoff.circle?nationGbn=T&serviceGbn=ALL&targetTime="+str(time)+"&hitYear="+str(year)+"&termGbn="+str(period)+"&yearTime=3")
     return driver.find_element(By.ID, "pc_chart_tbody")
 
-def get_kpop_rankings(by: str, date_from, date_until):
+#Function that return the DataFrame of the ranking of kpop songs
+#Parameters:
+#   - by (str) : Frequency of the ranking
+#                Among ["weekly", "monthly"(, "year")]
+#   - date_from (date) : Start date of the ranking
+#   - date_until (date) : End date of the ranking
+def get_kpop_rankings(by: str, date_from, date_until) -> pd.DataFrame:
     driver = webdriver.Chrome("D:\Code\Driver\chromedriver-win64\chromedriver.exe")
     songs_rank = []
     for year in range(date_from.year, date_until.year + 1):
