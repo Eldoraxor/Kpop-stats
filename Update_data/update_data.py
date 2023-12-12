@@ -1,6 +1,6 @@
 import pandas as pd
 #from Rankings import Circle_rankings
-from .MySQL_connection import register_data, get_sql_data, query_mysql
+from .context import MySQL
 
 """config = configparser.ConfigParser()
 config.read('config.ini')
@@ -11,7 +11,7 @@ connector_dir = {"host" : "localhost",
                  "database" : "Kpop"}"""
 
 def update_artists():
-    last_year  = query_mysql("SELECT MAX(year) FROM kpop.weekly_rankings")
+    last_year  = MySQL.query_mysql("SELECT MAX(year) FROM kpop.weekly_rankings")
     return last_year
 
 print(update_artists)

@@ -1,1 +1,1 @@
-from MySQL_connection import register_data, get_sql_data, query_mysql
+from .MySQL_connection import register_data, get_sql_data, query_mysql
