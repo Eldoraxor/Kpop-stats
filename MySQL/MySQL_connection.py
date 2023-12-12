@@ -8,7 +8,7 @@ config.read('config.ini')
 connector_dir = {"host" : "localhost",
                  "port" : 3306,
                  "user" : "root",
-                 "password" : config["mysql_password"],
+                 "password" : config['DEFAULT']["mysql_password"],
                  "database" : "Kpop"}
 
 def register_data(dataf: pd.DataFrame, table_name: str):
@@ -32,3 +32,19 @@ def get_sql_data(table_name: str) -> pd.DataFrame:
     mydb.close()
 
     return my_df
+
+#Function that returns the query in MySQL server
+#Parameters:
+#   - query (str) : String query
+def query_mysql(query: str) -> pd.DataFrame:
+    mydb = mysql.connector.connect(**connector_dir)
+    mycursor = mydb.cursor()
+    mycursor.execute(query)
+    results = mycursor.fetchall()
+
+    mycursor.close()
+    mydb.close()
+
+    return results
+
+print(query_mysql("SELECT `Korean name`, `Korean stage name` FROM kpop.artists"))
