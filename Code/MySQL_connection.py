@@ -16,7 +16,7 @@ def register_data(dataf: pd.DataFrame, table_name: str):
     mycursor = mydb.cursor()
 
     engine = create_engine(f"mysql+mysqlconnector://{connector_dir['user']}:{connector_dir['password']}@{connector_dir['host']}:{connector_dir['port']}/{connector_dir['database']}")
-    dataf.to_sql(table_name, con=engine, if_exists='replace', index=True, index_label= f"{table_name}_id")
+    dataf.to_sql(table_name, con=engine, if_exists='append', index=True, index_label= f"{table_name}_id")
 
     mydb.commit()
     mydb.close()
