@@ -1,9 +1,8 @@
 import pandas as pd
-
 import requests
 from bs4 import BeautifulSoup
 
-from MySQL.MySQL_connection import register_data, get_sql_data
+from MySQL_connection import register_data, get_sql_data
 
 #Function that returns all the kpop artists stored in dbkpop.com
 def get_artists_infos():
@@ -31,4 +30,3 @@ def get_artist_id():
         if len(list(artists_df[artists_df["Korean stage name"].eq(artist)]["artists_id"]))>1:
             print(artist)
     artist_ranking_df["artist_id"] = artist_id
-    print(artist_ranking_df)

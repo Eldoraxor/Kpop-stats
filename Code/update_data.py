@@ -1,24 +1,14 @@
-import pandas as pd
-from datetime import date, timedelta
-from Circle_rankings import get_kpop_rankings
-from MySQL_connection import query_mysql, register_data
+from datetime import date
+from Circle_rankings import new_rankings, get_kpop_rankings
+from MySQL_connection import register_data
+from dbkpop_artists import get_artists_infos, get_artist_id
 
-"""config = configparser.ConfigParser()
-config.read('config.ini')
-connector_dir = {"host" : "localhost",
-                 "port" : 3306,
-                 "user" : "root",
-                 "password" : config["mysql_password"],
-                 "database" : "Kpop"}"""
+def update():
+    new_rankings_df = new_rankings()
+    register_data(new_rankings_df, "weekly_ranking", method="append")
+    register_data(get_artists_infos(), "artists", "replace")
+    register_data(get_artist_id(), "artist_weekly_ranking", "replace")
 
-def update_rankings():
-    last_year  = query_mysql("SELECT MAX(year) FROM kpop.weekly_ranking")[0][0]
-    last_week = query_mysql("SELECT MAX(week) FROM kpop.weekly_ranking WHERE year = " + str(last_year))[0][0]
-    
-    last_week_date = date.fromisocalendar(last_year, last_week, 1)
-    new_week_date = last_week_date + timedelta(weeks=1)
-
-    print(f"Year {last_year} and week {last_week}")
-    last_rankings = get_kpop_rankings(by="weekly", date_from=new_week_date, date_until=date.today())
-    
-    register_data(last_rankings, "weekly_ranking")
+def reload():
+    rankings_df = get_kpop_rankings("weekly", date(2010,1,1), date.today())
+    register_data(rankings_df, "weekly_rankings", method="replace")

@@ -1,9 +1,9 @@
 import pandas as pd
-from datetime import date
+from datetime import date, timedelta
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-from MySQL_connection import register_data
+from MySQL_connection import register_data, query_mysql
 
 #Function that returns the html body of the ranking of kpop songs
 #Parameters:
@@ -63,3 +63,15 @@ def get_kpop_rankings(by: str, date_from, date_until) -> pd.DataFrame:
     driver.quit()
     song_ranking_df = pd.DataFrame(songs_rank)
     return song_ranking_df
+
+def new_rankings():
+    last_year  = query_mysql("SELECT MAX(year) FROM kpop.weekly_ranking")[0][0]
+    last_week = query_mysql("SELECT MAX(week) FROM kpop.weekly_ranking WHERE year = " + str(last_year))[0][0]
+    
+    last_week_date = date.fromisocalendar(last_year, last_week, 1)
+    new_week_date = last_week_date + timedelta(weeks=1)
+
+    print(f"Year {last_year} and week {last_week}")
+    last_rankings = get_kpop_rankings(by="weekly", date_from=new_week_date, date_until=date.today())
+    
+    return last_rankings
