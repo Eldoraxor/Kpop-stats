@@ -1,6 +1,9 @@
 import pandas as pd
+from datetime import date
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+
+from MySQL_connection import register_data
 
 #Function that returns the html body of the ranking of kpop songs
 #Parameters:
@@ -31,7 +34,7 @@ def get_kpop_rankings(by: str, date_from, date_until) -> pd.DataFrame:
         elif by == "weekly":
             period = "week"
             time_max = date_until.isocalendar().week if year == date_until.year else date(year, 12, 31).isocalendar().week
-            time_min = 1
+            time_min = date_from.isocalendar().week if year == date_until.year else 1
         print(f"From {time_min} to {time_max}")
 
         for time in range(time_min,time_max+1):
