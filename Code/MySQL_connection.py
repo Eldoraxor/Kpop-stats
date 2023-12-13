@@ -46,5 +46,3 @@ def query_mysql(query: str) -> pd.DataFrame:
     mydb.close()
 
     return results
-
-print(query_mysql("SELECT `Korean name`, `Korean stage name` FROM kpop.artists"))
