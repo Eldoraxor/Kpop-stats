@@ -33,8 +33,8 @@ def get_kpop_rankings(by: str, date_from, date_until) -> pd.DataFrame:
             time_min = date_from.month if year == date_from.year else 1
         elif by == "weekly":
             period = "week"
-            time_max = date_until.isocalendar().week if year == date_until.year else date(year, 12, 31).isocalendar().week
-            time_min = date_from.isocalendar().week if year == date_until.year else 1
+            time_max = date_until.isocalendar().week if year == date_until.year else (date.fromisoformat(f'{year}-W01-1') - timedelta(weeks=1)).isocalendar().week
+            time_min = date_from.isocalendar().week if year == date_from.year else 1
         print(f"From {time_min} to {time_max}")
 
         for time in range(time_min,time_max+1):
@@ -64,9 +64,10 @@ def get_kpop_rankings(by: str, date_from, date_until) -> pd.DataFrame:
     song_ranking_df = pd.DataFrame(songs_rank)
     return song_ranking_df
 
+#Function that gets the last ranking date stored and find the last rankings not extracted
 def new_rankings():
-    last_year  = query_mysql("SELECT MAX(year) FROM kpop.weekly_ranking")[0][0]
-    last_week = query_mysql("SELECT MAX(week) FROM kpop.weekly_ranking WHERE year = " + str(last_year))[0][0]
+    last_year  = query_mysql("SELECT MAX(year) FROM kpop.weekly_rankings")[0][0]
+    last_week = query_mysql("SELECT MAX(week) FROM kpop.weekly_rankings WHERE year = " + str(last_year))[0][0]
     
     last_week_date = date.fromisocalendar(last_year, last_week, 1)
     new_week_date = last_week_date + timedelta(weeks=1)

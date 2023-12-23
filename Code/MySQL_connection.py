@@ -9,7 +9,7 @@ connector_dir = {"host" : "localhost",
                  "port" : 3306,
                  "user" : "root",
                  "password" : config['DEFAULT']["mysql_password"],
-                 "database" : "Kpop"}
+                 "database" : "kpop"}
 
 def register_data(dataf: pd.DataFrame, table_name: str, method:str):
     mydb = mysql.connector.connect(**connector_dir)
