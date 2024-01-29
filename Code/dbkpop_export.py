@@ -38,8 +38,8 @@ def get_artist_id():
     artist_ranking_df = get_sql_data("artist_weekly_ranking")
     artist_id = []
     for artist in artist_ranking_df["artist"]:
-        artist_id.append(list(artists_df[artists_df["Korean stage name"].eq(artist)]["artists_id"]))
-        if len(list(artists_df[artists_df["Korean stage name"].eq(artist)]["artists_id"]))>1:
+        artist_id.append(list(artists_df[artists_df["Korean stage name"].eq(artist)]["index"]))
+        if len(list(artists_df[artists_df["Korean stage name"].eq(artist)]["index"]))>1:
             print(artist)
     artist_ranking_df["artist_id"] = artist_id
     return artist_ranking_df
@@ -62,3 +62,5 @@ def get_groups():
             groups.append(group + [column.text for column in line.find_all("td")])
     groups_df = pd.DataFrame(groups, columns=columns)
     return groups_df
+
+print(get_groups())
